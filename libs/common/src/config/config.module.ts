@@ -5,7 +5,8 @@ import * as Joi from 'joi';
 @Module({
   imports: [NestjsConfigModule.forRoot({
     validationSchema: Joi.object({
-      MONGODB_URI: Joi.string().required()
+      MONGODB_URI: Joi.string().required(),
+      STAGE: Joi.string().required()
     })
   })],
   providers: [ConfigService],
