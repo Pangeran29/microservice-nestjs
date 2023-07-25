@@ -1,16 +1,30 @@
 import { Module } from '@nestjs/common';
-import { DatabaseModule, LoggerModule } from '@app/common';
+import { AUTH_SERVICE, DatabaseModule, JwtAuthGuard, LoggerModule } from '@app/common';
 import { ReservationService } from './reservation.service';
 import { ReservationController } from './reservation.controller';
 import { ReservationRepository } from './reservation.repository';
 import { ReservationDocument, ReservationSchema } from './models/reservation.models';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from 'joi';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
     DatabaseModule,
-    LoggerModule,    
+    LoggerModule,
+    ClientsModule.registerAsync([
+      {
+        name: AUTH_SERVICE,
+        useFactory: (configService: ConfigService) => ({
+          transport: Transport.TCP,
+          options: {
+            host: configService.get('AUTH_HOST'),
+            port: configService.get('AUTH_PORT')
+          }
+        }),
+        inject: [ConfigService]
+      }
+    ]),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: './apps/reservation/.env',
@@ -20,7 +34,7 @@ import * as Joi from 'joi';
       })
     }),
     DatabaseModule.forFeature([
-      { 
+      {
         name: ReservationDocument.name,
         schema: ReservationSchema
       }
@@ -28,8 +42,8 @@ import * as Joi from 'joi';
   ],
   controllers: [ReservationController],
   providers: [
-    ReservationService, 
-    ReservationRepository
+    ReservationService,
+    ReservationRepository,
   ]
 })
-export class ReservationModule {}
+export class ReservationModule { }
