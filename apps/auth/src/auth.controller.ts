@@ -6,6 +6,7 @@ import { Response } from 'express';
 import { MessagePattern } from '@nestjs/microservices';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { CurrentUser } from '@app/common';
+import { LoginDto } from './dto/login.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -15,13 +16,14 @@ export class AuthController {
   @MessagePattern('authenticate')
   async authenticate(
     @CurrentUser() user: UserDocument,
-  ) {    
+  ) {
     return { ...user };
   }
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(
+    @Body() loginDto: LoginDto,
     @CurrentUser() user: UserDocument,
   ) {
     const token = await this.authService.login(user);

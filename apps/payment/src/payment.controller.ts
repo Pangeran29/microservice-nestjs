@@ -5,10 +5,11 @@ import { CreateChargeDto } from './dto/create-charge.dto';
 
 @Controller()
 export class PaymentController {
-  constructor(private readonly paymentService: PaymentService) {}
+  constructor(private readonly paymentService: PaymentService) { }
 
   @MessagePattern('create_charge')
-  createCharge(@Payload() data: CreateChargeDto) {
-    return this.paymentService.createCharge(data);
+  async createCharge(@Payload() data: CreateChargeDto) {
+    console.log('create_charge');
+    return await this.paymentService.createCharge(data);
   }
 }

@@ -1,7 +1,9 @@
 import { Types } from "mongoose";
 import { ReservationDocument } from "../models/reservation.models";
-import { IsDate, IsNotEmpty, IsString } from "class-validator";
+import { IsDate, IsDefined, IsNotEmpty, IsNotEmptyObject, IsNumber, IsString, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
+import { CardDto } from "@app/common";
+import { CreateChargeDto } from "apps/payment/src/dto/create-charge.dto";
 
 export class CreateReservationDto implements Partial<ReservationDocument> {
   @IsDate()
@@ -19,4 +21,10 @@ export class CreateReservationDto implements Partial<ReservationDocument> {
   @IsNotEmpty()
   @IsString()
   invoiceId: string;
+
+  @IsDefined()
+  @IsNotEmptyObject()
+  @ValidateNested()
+  @Type(() => CreateChargeDto)
+  charge: CreateChargeDto;
 }

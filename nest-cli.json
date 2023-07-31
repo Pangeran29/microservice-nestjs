@@ -5,7 +5,16 @@
   "compilerOptions": {
     "deleteOutDir": true,
     "webpack": true,
-    "tsConfigPath": "apps/reservation/tsconfig.app.json"
+    "tsConfigPath": "apps/reservation/tsconfig.app.json",
+    "plugins": [
+      {
+        "name": "@nestjs/swagger",
+        "options": {
+          "classValidatorShim": true,
+          "introspectComments": true
+        }
+      }
+    ]
   },
   "projects": {
     "common": {

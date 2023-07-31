@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { AUTH_SERVICE, DatabaseModule, JwtAuthGuard, LoggerModule } from '@app/common';
+import { AUTH_SERVICE, DatabaseModule, JwtAuthGuard, LoggerModule, PAYMENT_SERVICE } from '@app/common';
 import { ReservationService } from './reservation.service';
 import { ReservationController } from './reservation.controller';
 import { ReservationRepository } from './reservation.repository';
@@ -10,8 +10,6 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
-    DatabaseModule,
-    LoggerModule,
     ClientsModule.registerAsync([
       {
         name: AUTH_SERVICE,
@@ -23,6 +21,19 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
           }
         }),
         inject: [ConfigService]
+      },
+      {
+        // PAYMENT_HOST="payment"
+        // PAYMENT_PORT=3003
+        name: PAYMENT_SERVICE,
+        useFactory: (configService: ConfigService) => ({
+          transport: Transport.TCP,
+          options: {
+            host: 'payment',
+            port: 3003
+          }
+        }),
+        inject: [ConfigService]
       }
     ]),
     ConfigModule.forRoot({
@@ -30,7 +41,11 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
       envFilePath: './apps/reservation/.env',
       validationSchema: Joi.object({
         PORT: Joi.string().required(),
-        MONGODB_URI: Joi.string().required()
+        MONGODB_URI: Joi.string().required(),
+        AUTH_HOST: Joi.string().required(),
+        AUTH_PORT: Joi.string().required(),
+        PAYMENT_HOST: Joi.string().required(),
+        PAYMENT_PORT: Joi.string().required()
       })
     }),
     DatabaseModule.forFeature([
@@ -38,7 +53,9 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         name: ReservationDocument.name,
         schema: ReservationSchema
       }
-    ])
+    ]),
+    DatabaseModule,
+    LoggerModule
   ],
   controllers: [ReservationController],
   providers: [
