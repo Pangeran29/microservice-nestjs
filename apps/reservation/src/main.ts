@@ -10,7 +10,8 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true
   }));
-  // app.useLogger(app.get(Logger));
+  app.useLogger(app.get(Logger));
+  app.enableCors();
   const configService = app.get(ConfigService);
   const prefix = configService.get('PREFIX_NAME');
   app.setGlobalPrefix(prefix);

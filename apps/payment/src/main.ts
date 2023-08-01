@@ -11,6 +11,7 @@ async function bootstrap() {
     whitelist: true
   }));
   const configService = app.get(ConfigService);
+  app.enableCors();
   app.connectMicroservice({
     Transport: Transport.TCP,
     options: {

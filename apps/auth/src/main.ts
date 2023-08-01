@@ -9,6 +9,7 @@ import { SwaggerBuildFactory } from '@app/common';
 async function bootstrap() {
   const app = await NestFactory.create(AuthModule);
   const configService = app.get(ConfigService);
+  app.enableCors();
   app.connectMicroservice({
     transport: Transport.TCP,
     options: {

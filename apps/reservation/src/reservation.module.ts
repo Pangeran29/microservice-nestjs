@@ -23,14 +23,12 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         inject: [ConfigService]
       },
       {
-        // PAYMENT_HOST="payment"
-        // PAYMENT_PORT=3003
         name: PAYMENT_SERVICE,
         useFactory: (configService: ConfigService) => ({
           transport: Transport.TCP,
           options: {
-            host: 'payment',
-            port: 3003
+            host: configService.get('PAYMENT_HOST'),
+            port: configService.get('PAYMENT_PORT')
           }
         }),
         inject: [ConfigService]

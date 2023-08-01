@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Stripe from 'stripe';
 import { CreateChargeDto } from './dto/create-charge.dto';
@@ -19,20 +19,27 @@ export class PaymentService {
   async createCharge(
     {card, amount }: CreateChargeDto
   ) {
-    const paymentMethod = await this.stripeService.paymentMethods.create({
-      type: 'card',
-      card
-    });
-
-    const paymentIntent = await this.stripeService.paymentIntents.create({
-      payment_method: paymentMethod.id,
-      amount: amount * 100,
-      confirm: true,
-      payment_method_types: ['card'],
-      currency: 'usd'
-    });
-
-    return paymentIntent;
-
+    try {
+      return await this.stripeService.checkout.sessions.create({ 
+        payment_method_types: ["card"], 
+        line_items: [ 
+          { 
+            price_data: { 
+              currency: "inr", 
+              product_data: { 
+                name: "product.name", 
+              }, 
+              unit_amount: 10 * 100, 
+            }, 
+            quantity: 10, 
+          }, 
+        ], 
+        mode: "payment", 
+        success_url: "http://localhost:3000/success", 
+        cancel_url: "http://localhost:3000/cancel", 
+      });       
+    } catch (error) {
+      throw new ConflictException('Fail to checkout.');
+    }
   }
 }
