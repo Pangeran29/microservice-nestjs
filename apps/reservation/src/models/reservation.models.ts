@@ -19,6 +19,9 @@ export class ReservationDocument extends AbstractDocument {
   placeId: string;
 
   @Prop()
+  isPaid: boolean;
+
+  @Prop()
   invoiceId: string;
 }
 

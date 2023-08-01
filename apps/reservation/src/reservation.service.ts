@@ -18,16 +18,19 @@ export class ReservationService {
     return this.paymentService
       .send('create_charge', createReservationDto.charge)
       .pipe(
-        map(async (res) => {
-          this.reservationRepository.create({
+        map(async (res) => {          
+          const createdReservation = await this.reservationRepository.create({
             ...createReservationDto,
+            isPaid: false,
+            invoiceId: res?.id,
             timestamp: new Date(),
             userId
           });
 
           return { 
-            message: 'Please finish your order here',
-            url: res.url
+            message: 'Please finish your order in below url.',
+            stripePaymentUrl: res?.url,
+            data: createdReservation
           };
         })
       )
