@@ -9,6 +9,6 @@ export class NotificationController {
 
   @EventPattern('notify_email')
   notifyEmail(@Payload() notifyEmailDto: NotifyEmailDto) {
-    this.notificationService.notifyEmail(notifyEmailDto);
+    this.notificationService.notifyPaymentByEmail(notifyEmailDto);
   }
 }

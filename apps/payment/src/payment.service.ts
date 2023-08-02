@@ -22,7 +22,6 @@ export class PaymentService {
   );
 
   async createCharge({ email }: PaymentCreateChrageDto) {
-
     const createdCharge = await this.stripeService.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: [
@@ -41,9 +40,11 @@ export class PaymentService {
       success_url: "http://localhost:3000/success",
       cancel_url: "http://localhost:3000/cancel",
     });
-    
-    this.notificationService.emit('notify_email', { email });
-        
+
+    this.notificationService.emit('notify_email',
+      { email, paymentUrl: createdCharge.url }
+    );
+
     return createdCharge
   }
 }
