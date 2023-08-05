@@ -1,12 +1,9 @@
-# Monorepo Microservices
-backend microservices application that contains:
+# Description
+a simple monorepo backend microservices application that contains:
 1. Reservation Service
-
-## Timeline
-![Alt text](image-1.png)
-
-## About
-about monorepo: https://chat.openai.com/share/fba74302-9559-403f-ba38-558a26d14b93 
+2. Authentication Service
+3. Payment Service
+4. Notification Service
 
 ## Installation
 
