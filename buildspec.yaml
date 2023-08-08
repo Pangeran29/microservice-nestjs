@@ -1,0 +1,25 @@
+version: 0.2
+
+phases: 
+  pre_build:
+    commands:
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 321645924816.dkr.ecr.us-east-1.amazonaws.com
+  build:
+    commands:
+      - docker build -t reservation -f ./apps/reservation/Dockerfile .
+      - docker tag reservation:latest 321645924816.dkr.ecr.us-east-1.amazonaws.com/reservation:latest
+
+      - docker build -t auth -f ./apps/auth/Dockerfile .
+      - docker tag auth:latest 321645924816.dkr.ecr.us-east-1.amazonaws.com/auth:latest
+
+      - docker build -t payment -f ./apps/payment/Dockerfile .
+      - docker tag payment:latest 321645924816.dkr.ecr.us-east-1.amazonaws.com/payment:latest
+
+      - docker build -t notification -f ./apps/notification/Dockerfile .
+      - docker tag notification:latest 321645924816.dkr.ecr.us-east-1.amazonaws.com/notification:latest
+  post_build:
+    commands:
+      - docker push 321645924816.dkr.ecr.us-east-1.amazonaws.com/reservation:latest
+      - docker push 321645924816.dkr.ecr.us-east-1.amazonaws.com/auth:latest
+      - docker push 321645924816.dkr.ecr.us-east-1.amazonaws.com/payment:latest
+      - docker push 321645924816.dkr.ecr.us-east-1.amazonaws.com/notification:latest
