@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: notification
+  name: notification
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification
+  template:
+    metadata:
+      labels:
+        app: notification
+    spec:
+      containers:
+        - image: 321645924816.dkr.ecr.us-east-1.amazonaws.com/notification
+          name: notification
+          env:
+            - name: PORT
+              value: "3000"
+            - name: SMTP_USER
+              value: pangeranjonathan2@gmail.com
+            - name: GOOGLE_OAUTH_CLIENT_ID
+              value: 400233414476-u8dcb897asbpj4iqeegaiid41e0no55q.apps.googleusercontent.com
+            - name: GOOGLE_OAUTH_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: google
+                  key: clientSecret
+            - name: GOOGLE_OAUTH_REFRESH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: google
+                  key: refreshToken
+          ports:
+            - containerPort: 3000
