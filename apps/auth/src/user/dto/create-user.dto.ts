@@ -1,6 +1,5 @@
+import { UserDocument } from "@app/common";
 import { IsEmail, IsStrongPassword } from "class-validator";
-import { UserDocument } from "../models/user.schema";
-import { Types } from "mongoose";
 
 export class CreateUserDto implements Partial<UserDocument> {
   @IsEmail()

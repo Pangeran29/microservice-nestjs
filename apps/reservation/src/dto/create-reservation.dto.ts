@@ -1,7 +1,7 @@
 import { ReservationDocument } from "../models/reservation.models";
 import { IsDate, IsDefined, IsNotEmpty, IsNotEmptyObject, IsNumber, IsString, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
-import { CreateChargeDto } from "apps/payment/src/dto/create-charge.dto";
+import { ChargeDto } from "@app/common";
 
 export class CreateReservationDto implements Partial<ReservationDocument> {
   @IsDate()
@@ -23,6 +23,6 @@ export class CreateReservationDto implements Partial<ReservationDocument> {
   @IsDefined()
   @IsNotEmptyObject()
   @ValidateNested()
-  @Type(() => CreateChargeDto)
-  charge: CreateChargeDto;
+  @Type(() => ChargeDto)
+  charge: ChargeDto;
 }
